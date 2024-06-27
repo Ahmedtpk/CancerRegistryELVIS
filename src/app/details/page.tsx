@@ -86,7 +86,7 @@ const VariableDetails: React.FC = () => {
   };
 
   return (
-    <div className="flex bg-red-400 w-screen h-full min-h-screen pt-16">
+    <div className="flex w-screen h-full min-h-screen pt-16">
       <div className="bg-[#F5F5F5] w-1/5 h-screen overflow-y-scroll hidden md:flex flex-col">
         <p>TODO ADD FILTER OG CHECK BOKSES HER</p>
       </div>
@@ -249,7 +249,7 @@ const VariableDetails: React.FC = () => {
                   <ChevronDoubleDownIcon onClick={() => toggleVariableDetails(variable.id)} className="h-5 w-5" aria-hidden="true" />
                 </button>
                 <button className="border flex items-center gap-1 border-[#46658A] bg-[#46658A] rounded text-white p-2">
-                  <DocumentPlusIcon onClick={() => downloadExcel(variable.id.toString())} className="h-5 w-5" aria-hidden="true" />
+                  <DocumentPlusIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
