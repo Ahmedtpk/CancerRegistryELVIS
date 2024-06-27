@@ -245,8 +245,8 @@ const VariableDetails: React.FC = () => {
             </div>
             <div className="absolute right-0 gap-2 m-auto">
               <div className='flex gap-3'>
-                <button className="border flex items-center gap-1 border-[#46658A] bg-[#46658A] rounded text-white p-2">
-                  <ChevronDoubleDownIcon onClick={() => toggleVariableDetails(variable.id)} className="h-5 w-5" aria-hidden="true" />
+                <button onClick={() => toggleVariableDetails(variable.id)}  className="border flex items-center gap-1 border-[#46658A] bg-[#46658A] rounded text-white p-2">
+                  <ChevronDoubleDownIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
                 <button className="border flex items-center gap-1 border-[#46658A] bg-[#46658A] rounded text-white p-2">
                   <DocumentPlusIcon className="h-5 w-5" aria-hidden="true" />
