@@ -40,7 +40,7 @@ const VariableDetails: React.FC = () => {
   };
 
   return (
-    <div className="flex bg-white w-screen h-full min-h-screen pt-16">
+    <div className="flex max-w-screen w-fit md:w-screen bg-white  h-full min-h-screen pt-16">
       <div className="bg-[#F5F5F5] w-1/5 h-screen overflow-y-scroll hidden md:flex flex-col">
         <button onClick={handleBack} className='border p-1 w-16 border-[#46658A] ml-auto flex items-center justify-center mt-6 mr-6 rounded'><ChevronLeftIcon className='w-10 h-8 text-[#46658A]'/></button>
       </div>

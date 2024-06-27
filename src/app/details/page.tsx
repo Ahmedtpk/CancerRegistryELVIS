@@ -86,7 +86,7 @@ const VariableDetails: React.FC = () => {
   };
 
   return (
-    <div className="flex w-screen h-full min-h-screen pt-16">
+    <div className="flex max-w-screen w-fit md:w-screen h-full min-h-screen pt-16">
       <div className="bg-[#F5F5F5] w-1/5 h-screen overflow-y-scroll hidden md:flex flex-col">
         <p>TODO ADD FILTER OG CHECK BOKSES HER</p>
       </div>
