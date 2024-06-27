@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export default function Example() {
   return (
-    <Disclosure as="nav" className="bg-[#46658A] border-b absolute w-full border-black shadow">
+    <Disclosure as="nav" className="bg-[#46658A] border-b fixed sm:absolute w-screen sm:w-full border-black shadow">
       {({ open }) => (
         <>
           <div className="max-w-full w-full px-2 sm:px-4 lg:pr-7">
