@@ -12,14 +12,42 @@ const VariableDetails: React.FC = () => {
   const [showVariableDetailsID, setShowVariableDetailsID] = useState<number>(0)
   const [paginationValues, setPaginationValues] = useState({ start: 0, end: 20})
   const [paginationBarRange, setPaginationBarRange] = useState({barRangeStart: 0, barRangeEnd: 15})
-  const [sortIngConditions, setSortIngConditions] = useState('')
+  const [validFromOptions, setValidFromOptions] = useState<string[]>([])
+  const [validFrom, setValidFrom] = useState<string>('')
+  const [validTo, setValidTo] = useState<string>('')
   const [searchKeyWord, setSearchKeyWord] = useState('')
   const [filteredData, setFilteredData] = useState<VariableData[] | null>(null);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
 
 
   useEffect(() => {
     fetchAllVariableData()
   }, [])
+
+  useEffect(() => {
+    if (!validFrom) {
+      setFilteredData(null)
+      return
+    }
+
+    const filtered = allVariableData?.filter((item) =>
+    item.validFrom.toLowerCase().includes(validFrom))
+    setFilteredData(filtered || null)
+
+  }, [validFrom, validTo])
+
+  useEffect(() => {
+    if (!selectedCategory) {
+      setFilteredData(null)
+      return
+    }
+
+    const filtered = allVariableData?.filter((item) =>
+    item.category.name.includes(selectedCategory))
+    setFilteredData(filtered || null)
+
+  }, [selectedCategory])
 
   useEffect(() => {
     if (searchKeyWord) {
@@ -50,6 +78,16 @@ const VariableDetails: React.FC = () => {
         throw new Error('Failed to fetch data');
       }
       const data: allVariableDataDTO = await response.json();
+      // Get valid from years
+      const validFromYears = data.variableList.map(item => item.validFrom.slice(6, 10));
+      const uniqueYears = Array.from(new Set(validFromYears));
+      console.log(uniqueYears)
+      setValidFromOptions(uniqueYears.sort((a, b) => parseInt(a) - parseInt(b)));
+      // get category options
+      const categories = data.variableList.map(item => item.category.name);
+      const uniqueCategories = Array.from(new Set(categories));
+      setCategoryOptions(uniqueCategories.sort((a, b) => a.localeCompare(b)));
+
       data.variableList.sort((a, b) => a.name.localeCompare(b.name))
       setAllVariableData(data.variableList);
     } catch (error) {
@@ -64,6 +102,14 @@ const VariableDetails: React.FC = () => {
     setShowVariableDetailsID(id)
     }
   }
+
+  const resetSearchData = () => {
+    setSearchKeyWord('');
+    setValidFrom('');
+    setValidTo('');
+    setSelectedCategory('');
+    setFilteredData(null);
+  };
 
   const downloadExcel = (id: string) => {
     console.log('downloading excel')
@@ -108,55 +154,67 @@ const VariableDetails: React.FC = () => {
         <p className="text-4xl text-[#46658A] font-semibold">Variabler</p>
         <div className="flex gap-3">
           {/* // TODO lag et komponent her */}
-          <div>
+          <div className='flex items-center'>
             <input
-              className="border p-2 rounded w-64 border-r-0 placeholder-gray-600 rounded-r-none "
+              className="border p-2 rounded w-64 border-r-0 focus:border-0 placeholder-gray-600 rounded-r-none "
               type="text"
               placeholder="Søk etter Variabler"
               value={searchKeyWord}
               onChange={handleSearchChange}
             />
-            <button className="border bg-[#46658A] border-l-0 rounded rounded-l-none text-white p-2">
+            <button className="border bg-[#46658A] h-full border-l-0 rounded rounded-l-none text-white p-2">
               <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
-          <select className="border p-2 focus:border-blue-500 rounded w-44 placeholder-gray-600 rounded-r-none">
-            <option value="" disabled selected>
+          <select 
+            className="border p-2 focus:border-blue-500 rounded w-44 placeholder-gray-600 rounded-r-none"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+            <option value="" disabled>
               Kategorier
             </option>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-            <option value="option4">Option 4</option>
-            <option value="option5">Option 5</option>
+            {categoryOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
           </select>
 
           {/* TODO lag et komponent her */}
-          <select className="border p-2 focus:border-blue-500 rounded w-44 placeholder-gray-600 rounded-r-none">
-            <option value="" disabled selected>
+          <select 
+            className="border p-2 focus:border-blue-500 rounded w-44 placeholder-gray-600 rounded-r-none"
+            value={validFrom}
+            onChange={(e) => setValidFrom(e.target.value)}
+            >
+            <option value="" disabled>
               Gyldig fra
             </option>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-            <option value="option4">Option 4</option>
-            <option value="option5">Option 5</option>
+            {validFromOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
           </select>
-          <select className="border p-2 focus:border-blue-500 rounded w-44 placeholder-gray-600 rounded-r-none">
-            <option value="" disabled selected>
+          <select 
+            className="border p-2 focus:border-blue-500 rounded w-44 placeholder-gray-600 rounded-r-none"
+            value={validTo}
+            onChange={(e) => setValidTo(e.target.value)}
+            >
+            <option value="" disabled>
               Gyldig til
             </option>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-            <option value="option4">Option 4</option>
-            <option value="option5">Option 5</option>
+            {validFromOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
           </select>
           <button className="border flex items-center gap-1 border-[#46658A] hover:bg-[#46658A] rounded hover:text-white p-2">
             <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" /> Søk
           </button>
           <button className="border border-[#46658A] hover:bg-[#46658A] rounded hover:text-white p-2">
-            <ArrowUturnLeftIcon className="h-5 w-5" aria-hidden="true" />
+            <ArrowUturnLeftIcon onClick={() => resetSearchData()} className="h-5 w-5" aria-hidden="true" />
           </button>
           <button onClick={() => downloadExcel('')} className="border border-[#46658A] hover:bg-[#46658A] rounded hover:text-white p-2">
             <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
@@ -275,7 +333,7 @@ const VariableDetails: React.FC = () => {
           </div>
         </div>
       ))}
-      { !searchKeyWord &&
+      { !searchKeyWord && !categoryOptions && !validFromOptions &&
         <div className=' flex gap-2 items-center justify-center w-full mb-32 h-20'>
           <button onClick={() => setPaginationBarRange({barRangeStart: paginationValues.start * 2, barRangeEnd: paginationValues.start * 2 + 10})} className='border p-1 w-16 border-[#46658A] flex items-center justify-center hover:bg-[#46658A] hover:text-white rounded'><ChevronDoubleLeftIcon className='w-7 h-7 text-[#46658A]'/></button>
           <button className='border p-1 w-16 border-[#46658A] flex items-center justify-center hover:bg-[#46658A] hover:text-white rounded'><ChevronLeftIcon className='w-7 h-7 text-[#46658A]'/></button>
